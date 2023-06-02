@@ -1,14 +1,27 @@
-import audio
+from gtts import gTTS
+from gtts.tokenizer.pre_processors import abbreviations, end_of_line
+from pygame import mixer
+import time
 import prompt
 
-audio.text = prompt.b
-audio.tts = audio.gTTS(
-  audio.text,
-  lang='es',
-  slow=False,
-  pre_processor_funcs=[audio.abbreviations, audio.end_of_line])
-audio.tts.save('traudio.mp3')
-audio.mixer.init()
-audio.mixer.music.load("traudio.mp3")
-audio.mixer.music.play()
-audio.time.sleep(prompt.count)
+text = prompt.a
+tts = gTTS(text,
+           lang='en',
+           slow=False,
+           pre_processor_funcs=[abbreviations, end_of_line])
+tts.save('tenaudio.py.mp3')
+mixer.init()
+mixer.music.load("tenaudio.py.mp3")
+mixer.music.play()
+time.sleep(prompt.count)
+
+text = prompt.b
+tts = gTTS(text,
+           lang='es',
+           slow=False,
+           pre_processor_funcs=[abbreviations, end_of_line])
+tts.save('tesaudio.py.mp3')
+mixer.init()
+mixer.music.load("tesaudio.py.mp3")
+mixer.music.play()
+time.sleep(prompt.count)
