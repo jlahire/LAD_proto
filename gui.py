@@ -16,7 +16,7 @@ fee = words.feeling
 
 # Create a Tkinter window
 window = tk.Tk()
-window.title("Word Selector")
+window.title("Purple Irish Penguins Grab Sea Wookie Star Mittens")
 
 ls_words = {
   "greeting": gre,
