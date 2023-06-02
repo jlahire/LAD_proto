@@ -9,6 +9,7 @@ python = "^3.10"
 pygame = "^2.4.0"
 PySimpleGUI = "^4.60.5"
 gTTS = "^2.3.2"
+pillow = "^9.5.0"
 
 [tool.poetry.dev-dependencies]
 
