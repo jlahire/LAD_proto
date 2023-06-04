@@ -4,6 +4,8 @@ from pygame import mixer
 import time
 import prompt
 
+print(prompt.count)
+
 text = prompt.a
 tts = gTTS(text,
            lang='en',

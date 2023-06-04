@@ -20,8 +20,11 @@ ls_words = {
   "feeling": fee
 }
 
-tr_words = {}
+# tr_words = {}
+
+# need to add count modifier and explore creating a syllable library to determine how long the pause should be in the audio
 count = 0
+
 
 prompt = input('\nWould you like to start? (y/n)\n >> ')
 for a in prompt:
