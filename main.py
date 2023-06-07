@@ -20,9 +20,29 @@ dri = words.drink
 fee = words.feeling
 
 window = tk.Tk()
-window.title("Language Assistance Device -- Protoype")
-window.configure(bg="light blue")
-window.geometry("800x600")
+window.title("Language Assistance Device -- Prototype")
+window.attributes("-fullscreen", True)  # Make the window fullscreen
+
+# Color schemes
+color_schemes = {
+    "Rainbow Delight": {
+        "primary": "IndianRed",
+        "secondary": "DarkOrange",
+        "accent": "Gold",
+    },
+    "Nature's Harmony": {
+        "primary": "MediumSeaGreen",
+        "secondary": "Burlywood",
+        "accent": "PeachPuff",
+    },
+    "Dreamy Pastels": {
+        "primary": "PowderBlue",
+        "secondary": "LavenderBlush",
+        "accent": "LightPink",
+    },
+}
+
+current_color_scheme = "Nature's Harmony"
 
 ls_words = {
     "greeting": gre,
@@ -32,13 +52,18 @@ ls_words = {
     "action": act,
     "object": obj,
     "drink": dri,
-    "feeling": fee
+    "feeling": fee,
 }
 
 sub_cat_menu = None
 category_var = tk.StringVar()
 
 mixer.init()
+
+# Function to move the settings button to the top right corner
+def move_settings_button_bottom_right():
+    settings_button.place(x=window.winfo_screenwidth()-110, y=window.winfo_screenheight()-60)
+
 
 def select_category(category):
     category_var.set(category)
@@ -78,14 +103,16 @@ def reset_selection():
     global sub_cat_menu
     if sub_cat_menu:
         sub_cat_menu.destroy()
+        sub_cat_menu = None  # Reset sub_cat_menu variable
     result_label["text"] = ""
     reset_button.pack_forget()
 
     # Reposition reset button
     reset_button.pack(side="bottom", pady=10)
 
+
 def create_category_tabs():
-    category_frame = tk.Frame(window, bg="dark blue")
+    category_frame = tk.Frame(window, bg=color_schemes[current_color_scheme]["primary"])
     category_frame.pack(fill="x")
 
     for category in ls_words.keys():
@@ -93,18 +120,18 @@ def create_category_tabs():
             category_frame,
             text=category.capitalize(),
             width=15,
-            fg="white",
-            bg="dark blue",
-            activebackground="light blue",
-            activeforeground="white",
+            fg=color_schemes[current_color_scheme]["primary"],
+            bg=color_schemes[current_color_scheme]["secondary"],
+            activebackground=color_schemes[current_color_scheme]["accent"],
+            activeforeground=color_schemes[current_color_scheme]["primary"],
             relief="flat",
-            command=lambda category=category: select_category(category)
+            command=lambda category=category: select_category(category),
         )
         category_button.pack(side="left", padx=10, pady=5)
 
 def create_sub_category_menu(sub_cats):
     global sub_cat_menu
-    sub_cat_menu_frame = tk.Frame(window, bg="light blue")
+    sub_cat_menu_frame = tk.Frame(window, bg=color_schemes[current_color_scheme]["primary"])
     sub_cat_menu_frame.pack(pady=10)
 
     rows = 2
@@ -119,9 +146,9 @@ def create_sub_category_menu(sub_cats):
             sub_cat_menu_frame,
             image=photo,
             command=lambda sub_cat=sub_cat: select_sub_category(sub_cat),
-            bg="light blue",
-            activebackground="light blue",
-            relief="flat"
+            bg=color_schemes[current_color_scheme]["secondary"],
+            activebackground=color_schemes[current_color_scheme]["accent"],
+            relief="flat",
         )
         sub_cat_button.image = photo
 
@@ -133,15 +160,96 @@ def create_sub_category_menu(sub_cats):
     sub_cat_menu_frame.grid_columnconfigure(0, weight=1)
     sub_cat_menu_frame.grid_columnconfigure(columns, weight=1)
 
-category_label = tk.Label(window, text="Choose a category:", bg="light blue")
+def change_color_scheme(new_scheme):
+    global current_color_scheme
+    current_color_scheme = new_scheme
+
+    # Update window background color
+    window.configure(bg=color_schemes[current_color_scheme]["primary"])
+
+    # Update category button colors
+    for widget in category_frame.winfo_children():
+        widget.configure(
+            fg=color_schemes[current_color_scheme]["primary"],
+            bg=color_schemes[current_color_scheme]["secondary"],
+            activebackground=color_schemes[current_color_scheme]["accent"],
+            activeforeground=color_schemes[current_color_scheme]["primary"],
+        )
+
+    # Check if sub_cat_menu exists
+    if sub_cat_menu is not None:
+        # Update sub-category button colors
+        for widget in sub_cat_menu.winfo_children():
+            widget.configure(
+                bg=color_schemes[current_color_scheme]["secondary"],
+                activebackground=color_schemes[current_color_scheme]["accent"],
+            )
+
+    # Update result label color
+    result_label.configure(bg=color_schemes[current_color_scheme]["primary"])
+
+    # Update reset button colors
+    reset_button.configure(
+        fg=color_schemes[current_color_scheme]["primary"],
+        bg=color_schemes[current_color_scheme]["secondary"],
+        activebackground=color_schemes[current_color_scheme]["accent"],
+    )
+
+    # Update settings button colors
+    settings_button.configure(
+        fg=color_schemes[current_color_scheme]["primary"],
+        bg=color_schemes[current_color_scheme]["secondary"],
+        activebackground=color_schemes[current_color_scheme]["accent"],
+    )
+
+    # Move the settings button to the top right corner
+    move_settings_button_bottom_right()
+
+# Settings button callback
+def open_settings():
+    settings_window = tk.Toplevel(window)
+    settings_window.title("Settings")
+    settings_window.geometry("400x300")
+
+    settings_label = tk.Label(settings_window, text="Select Color Scheme:")
+    settings_label.pack(pady=10)
+
+    # Color scheme radio buttons
+    for scheme in color_schemes.keys():
+        color_scheme_radio = tk.Radiobutton(
+            settings_window,
+            text=scheme,
+            value=scheme,
+            variable=color_scheme_var,
+            command=lambda: change_color_scheme(color_scheme_var.get()),
+        )
+        color_scheme_radio.pack(pady=5)
+    move_settings_button_bottom_right()
+
+# Initialize color scheme variable
+color_scheme_var = tk.StringVar(window)
+color_scheme_var.set(current_color_scheme)
+
+# Category label and tabs
+category_label = tk.Label(window, text="Choose a category:")
 category_label.pack()
+category_frame = tk.Frame(window)
+category_frame.pack(fill="x")
 create_category_tabs()
 
 sub_cat_var = tk.StringVar(window)
 
-result_label = tk.Label(window, text="", bg="light blue")
+result_label = tk.Label(window, text="")
 result_label.pack(pady=10)
 
 reset_button = tk.Button(window, text="Reset", command=reset_selection)
+reset_button.pack(side="bottom", pady=10)
+
+# Settings button
+settings_button = tk.Button(window, text="Settings", command=open_settings)
+settings_button.pack(side="top", padx=10, pady=5)
+
+# Apply color scheme
+change_color_scheme(current_color_scheme)
 
 window.mainloop()
