@@ -6,7 +6,7 @@ import prompt
 
 print(prompt.count)
 
-text = prompt.a
+text = a
 tts = gTTS(text,
            lang='en',
            slow=False,
@@ -15,9 +15,9 @@ tts.save('tenaudio.py.mp3')
 mixer.init()
 mixer.music.load("tenaudio.py.mp3")
 mixer.music.play()
-time.sleep(prompt.count)
+time.sleep(count)
 
-text = prompt.b
+text = b
 tts = gTTS(text,
            lang='es',
            slow=False,
@@ -26,4 +26,4 @@ tts.save('tesaudio.py.mp3')
 mixer.init()
 mixer.music.load("tesaudio.py.mp3")
 mixer.music.play()
-time.sleep(prompt.count)
+time.sleep(count)
